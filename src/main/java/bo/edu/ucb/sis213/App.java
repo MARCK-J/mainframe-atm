@@ -1,25 +1,57 @@
 package bo.edu.ucb.sis213;
 
 import java.util.Scanner;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
-/**
- * Hello world!
- *
- */
 public class App {
-    private static final int PIN_CORRECTO = 1234;  // Puedes cambiar este valor al PIN que prefieras
-    private static double saldo = 1000.0;  // Saldo inicial
-    private static int pinActual = PIN_CORRECTO;
+    private static int usuarioId;
+    private static double saldo;
+    private static int pinActual;
+
+    private static final String HOST = "127.0.0.1";
+    private static final int PORT = 3306;
+    private static final String USER = "root";
+    private static final String PASSWORD = "123456";
+    private static final String DATABASE = "atm";
+
+    public static Connection getConnection() throws SQLException {
+        String jdbcUrl = String.format("jdbc:mysql://%s:%d/%s", HOST, PORT, DATABASE);
+        try {
+            // Asegúrate de tener el driver de MySQL agregado en tu proyecto
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            throw new SQLException("MySQL Driver not found.", e);
+        }
+
+        return DriverManager.getConnection(jdbcUrl, USER, PASSWORD);
+    }
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         int intentos = 3;
 
         System.out.println("Bienvenido al Cajero Automático.");
+
+        Connection connection = null;
+        try {
+            connection = getConnection(); // Reemplaza esto con tu conexión real
+        } catch (SQLException ex) {
+            System.err.println("No se puede conectar a Base de Datos");
+            ex.printStackTrace();
+            System.exit(1);
+        }
+        
+
         while (intentos > 0) {
             System.out.print("Ingrese su PIN de 4 dígitos: ");
             int pinIngresado = scanner.nextInt();
-            if (pinIngresado == pinActual) {
+            if (validarPIN(connection, pinIngresado)) {
+                pinActual = pinIngresado;
                 mostrarMenu();
                 break;
             } else {
@@ -32,6 +64,24 @@ public class App {
                 }
             }
         }
+    }
+
+    public static boolean validarPIN(Connection connection, int pin) {
+        String query = "SELECT id, saldo FROM usuarios WHERE pin = ?";
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1, pin);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                usuarioId = resultSet.getInt("id");
+                saldo = resultSet.getDouble("saldo");
+                return true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     public static void mostrarMenu() {
