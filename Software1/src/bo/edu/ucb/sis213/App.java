@@ -6,20 +6,23 @@ import java.awt.event.ActionListener;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Scanner;
 
 public class App {
 
     public static void main(String[] args) {
-        JFrame frame = new JFrame("Cajero Automático");
+        JFrame frame = new JFrame("Cajero Automatico");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(460, 250);
         frame.getContentPane().setLayout(null);
 
-        JLabel pinLabel = new JLabel("Ingrese su PIN de 4 dígitos:");
+        JLabel pinLabel = new JLabel("Ingrese su Password de 6 digitos:");
         pinLabel.setHorizontalAlignment(SwingConstants.CENTER);
         pinLabel.setBounds(10, 128, 200, 20);
         frame.getContentPane().add(pinLabel);
+
+        JTextField aliasTextField = new JTextField();
+        aliasTextField.setBounds(216, 73, 220, 20);
+        frame.getContentPane().add(aliasTextField);
 
         JTextField pinTextField = new JTextField();
         pinTextField.setBounds(216, 128, 220, 20);
@@ -33,6 +36,11 @@ public class App {
         lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
         lblNewLabel.setBounds(176, 28, 70, 14);
         frame.getContentPane().add(lblNewLabel);
+        
+        JLabel lblIngreseSuAlias = new JLabel("Ingrese su Alias");
+        lblIngreseSuAlias.setHorizontalAlignment(SwingConstants.CENTER);
+        lblIngreseSuAlias.setBounds(6, 73, 200, 20);
+        frame.getContentPane().add(lblIngreseSuAlias);
 
         loginButton.addActionListener(new ActionListener() {
             @Override
@@ -40,8 +48,9 @@ public class App {
                 int intentos = 3;
                 try {
                     Connection connection = Conexion.getConnection();
-                    int pinIngresado = Integer.parseInt(pinTextField.getText());
-                    int usuarioId = Cajero.obtenerUsuarioIdPorPin(connection, pinIngresado);
+                    int passwIngresado = Integer.parseInt(pinTextField.getText());
+                    String aliasIngresado = aliasTextField.getText();
+                    int usuarioId = Cajero.obtenerUsuarioIdPorPin(connection, aliasIngresado, passwIngresado);
                     if (usuarioId != -1) {
                         Cajero.setUsuarioId(usuarioId);
                         frame.dispose();
@@ -49,9 +58,9 @@ public class App {
                     } else {
                         intentos--;
                         if (intentos > 0) {
-                            JOptionPane.showMessageDialog(null, "PIN incorrecto. Le quedan " + intentos + " intentos.");
+                            JOptionPane.showMessageDialog(null, "Password incorrecto. Le quedan " + intentos + " intentos.");
                         } else {
-                            JOptionPane.showMessageDialog(null, "PIN incorrecto. Ha excedido el número de intentos.");
+                            JOptionPane.showMessageDialog(null, "PIN incorrecto. Ha excedido el numero de intentos.");
                             System.exit(0);
                         }
                     }
@@ -64,6 +73,5 @@ public class App {
         frame.setVisible(true);
     }
 }
-
 
 

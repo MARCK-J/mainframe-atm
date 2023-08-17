@@ -6,27 +6,41 @@ import java.awt.event.ActionListener;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Scanner;
 
 public class App {
 
     public static void main(String[] args) {
-        JFrame frame = new JFrame("Cajero Automático");
+        JFrame frame = new JFrame("Cajero Automatico");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(300, 150);
-        frame.setLayout(null);
+        frame.setSize(460, 250);
+        frame.getContentPane().setLayout(null);
 
-        JLabel pinLabel = new JLabel("Ingrese su PIN de 4 dígitos:");
-        pinLabel.setBounds(20, 20, 200, 20);
-        frame.add(pinLabel);
+        JLabel pinLabel = new JLabel("Ingrese su Password de 6 digitos:");
+        pinLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        pinLabel.setBounds(10, 128, 200, 20);
+        frame.getContentPane().add(pinLabel);
+
+        JTextField aliasTextField = new JTextField();
+        aliasTextField.setBounds(216, 73, 220, 20);
+        frame.getContentPane().add(aliasTextField);
 
         JTextField pinTextField = new JTextField();
-        pinTextField.setBounds(20, 50, 100, 20);
-        frame.add(pinTextField);
+        pinTextField.setBounds(216, 128, 220, 20);
+        frame.getContentPane().add(pinTextField);
 
         JButton loginButton = new JButton("Ingresar");
-        loginButton.setBounds(130, 50, 80, 20);
-        frame.add(loginButton);
+        loginButton.setBounds(329, 170, 107, 20);
+        frame.getContentPane().add(loginButton);
+        
+        JLabel lblNewLabel = new JLabel("Bienvenido");
+        lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        lblNewLabel.setBounds(176, 28, 70, 14);
+        frame.getContentPane().add(lblNewLabel);
+        
+        JLabel lblIngreseSuAlias = new JLabel("Ingrese su Alias");
+        lblIngreseSuAlias.setHorizontalAlignment(SwingConstants.CENTER);
+        lblIngreseSuAlias.setBounds(6, 73, 200, 20);
+        frame.getContentPane().add(lblIngreseSuAlias);
 
         loginButton.addActionListener(new ActionListener() {
             @Override
@@ -35,7 +49,8 @@ public class App {
                 try {
                     Connection connection = Conexion.getConnection();
                     int pinIngresado = Integer.parseInt(pinTextField.getText());
-                    int usuarioId = Cajero.obtenerUsuarioIdPorPin(connection, pinIngresado);
+                    String aliasIngresado = aliasTextField.getText();
+                    int usuarioId = Cajero.obtenerUsuarioIdPorPin(connection, aliasIngresado, pinIngresado);
                     if (usuarioId != -1) {
                         Cajero.setUsuarioId(usuarioId);
                         frame.dispose();
@@ -43,9 +58,9 @@ public class App {
                     } else {
                         intentos--;
                         if (intentos > 0) {
-                            JOptionPane.showMessageDialog(null, "PIN incorrecto. Le quedan " + intentos + " intentos.");
+                            JOptionPane.showMessageDialog(null, "Password incorrecto. Le quedan " + intentos + " intentos.");
                         } else {
-                            JOptionPane.showMessageDialog(null, "PIN incorrecto. Ha excedido el número de intentos.");
+                            JOptionPane.showMessageDialog(null, "PIN incorrecto. Ha excedido el numero de intentos.");
                             System.exit(0);
                         }
                     }
@@ -58,6 +73,5 @@ public class App {
         frame.setVisible(true);
     }
 }
-
 
 
