@@ -1,25 +1,39 @@
 package bo.edu.ucb.sis213;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.Dimension;
+import java.awt.Toolkit;
+import javax.swing.JFrame;
 
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import java.awt.Color;
+import java.awt.Font;
 
 public class Menu {
+    /**
+     * @wbp.parser.entryPoint
+     */
     public static void mostrarMenu(Connection connection, int usuarioId) {
         JFrame menuFrame = new JFrame("Menú Principal");
+        menuFrame.getContentPane().setBackground(new Color(255, 255, 208));
         menuFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         menuFrame.setSize(400, 300);
         menuFrame.getContentPane().setLayout(null);
+
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        
+        // Calcular las coordenadas para centrar el frame
+        int x = (screenSize.width - menuFrame.getWidth()) / 2;
+        int y = (screenSize.height - menuFrame.getHeight()) / 2;
+        
+        // Establecer las coordenadas para el frame
+        menuFrame.setLocation(x, y);
 
         JLabel opcionesLabel = new JLabel(
                 "<html><pre>" +
@@ -32,15 +46,17 @@ public class Menu {
                         "Seleccione una opción: " +
                         "</pre></html>"
         );
-        opcionesLabel.setBounds(20, 26, 300, 144);
+        opcionesLabel.setFont(new Font("Tahoma", Font.PLAIN, 14));
+        opcionesLabel.setBounds(10, 0, 366, 199);
         menuFrame.getContentPane().add(opcionesLabel);
 
         JTextField opcionTextField = new JTextField();
-        opcionTextField.setBounds(20, 180, 100, 20);
+        opcionTextField.setBounds(10, 232, 126, 20);
         menuFrame.getContentPane().add(opcionTextField);
 
         JButton seleccionarButton = new JButton("Seleccionar");
-        seleccionarButton.setBounds(276, 181, 100, 20);
+        seleccionarButton.setBackground(new Color(145, 200, 255));
+        seleccionarButton.setBounds(250, 232, 126, 20);
         menuFrame.getContentPane().add(seleccionarButton);
 
         seleccionarButton.addActionListener(e -> {
@@ -49,28 +65,28 @@ public class Menu {
                 case 1:
                     try {
                         String saldoMessage = Cajero.consultarSaldo(connection, usuarioId);
-                        mostrarMensaje("Consulta de Saldo", saldoMessage);
+                        Mensaje.mostrarMensaje("Consulta de Saldo", saldoMessage);
                     } catch (SQLException ex) {
                         ex.printStackTrace();
                     }
                     break;
                 case 2:
                     try {
-                        Cajero.realizarDeposito(connection, usuarioId);
+                        Deposito.realizarDeposito(connection, usuarioId);
                     } catch (SQLException ex) {
                         ex.printStackTrace();
                     }
                     break;
                 case 3:
                     try {
-                        Cajero.realizarRetiro(connection, usuarioId);
+                        Retiro.realizarRetiro(connection, usuarioId);
                     } catch (SQLException ex) {
                         ex.printStackTrace();
                     }
                     break;
                 case 4:
                     try {
-                        Cajero.cambiarPIN(connection, usuarioId);
+                        CambioPin.cambiarPIN(connection, usuarioId);
                     } catch (SQLException ex) {
                         ex.printStackTrace();
                     }
@@ -90,22 +106,4 @@ public class Menu {
     /**
      * @wbp.parser.entryPoint
      */
-    public static void mostrarMensaje(String titulo, String mensaje) {
-        JFrame mensajeFrame = new JFrame(titulo);
-        mensajeFrame.setSize(500, 300);
-        mensajeFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        mensajeFrame.getContentPane().setLayout(null);
-        
-        JButton cerrarButton = new JButton("Cerrar");
-        cerrarButton.setBounds(362, 212, 100, 25);
-        cerrarButton.addActionListener(e -> mensajeFrame.dispose());
-        mensajeFrame.getContentPane().add(cerrarButton);
-
-        JTextArea mensajeArea = new JTextArea(mensaje);
-        mensajeArea.setBounds(10, 11, 466, 241);
-        mensajeArea.setEditable(false);
-        mensajeFrame.getContentPane().add(mensajeArea);
-
-        mensajeFrame.setVisible(true);
-    }
 }
