@@ -1,4 +1,4 @@
-package bo.edu.ucb.sis213;
+package bo.edu.ucb.sis213.swing;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
@@ -11,7 +11,10 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+
 import java.awt.Color;
+
+import bo.edu.ucb.sis213.Funciones.Cajero;
 
 public class Retiro {
 	/**

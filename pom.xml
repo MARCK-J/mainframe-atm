@@ -25,7 +25,7 @@
                 </execution>
             </executions>
             <configuration>
-                <mainClass>bo.edu.ucb.sis213.App</mainClass>
+                <mainClass>bo.edu.ucb.sis213.swing.App</mainClass>
             </configuration>
         </plugin>
     </plugins>

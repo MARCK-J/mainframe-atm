@@ -1,4 +1,4 @@
-package bo.edu.ucb.sis213;
+package bo.edu.ucb.sis213.swing;
 
 import java.awt.Color;
 import java.awt.Dimension;

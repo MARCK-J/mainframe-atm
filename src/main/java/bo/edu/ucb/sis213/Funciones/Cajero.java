@@ -1,4 +1,4 @@
-package bo.edu.ucb.sis213;
+package bo.edu.ucb.sis213.Funciones;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -9,7 +9,7 @@ import java.sql.SQLException;
 public class Cajero {
     private static int usuarioId;
     private static String usuarioAlias;
-    static int usuarioPIN;
+    public static int usuarioPIN;
     private static double saldo;
     
     public static boolean validarPIN(Connection connection, int pin) {
